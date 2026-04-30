@@ -6,5 +6,9 @@
   "http://bbc.com/": {
     "file": "responses/08e8262ecc672d4b56e7a18e499facde3afc262a49c6be8d85fd7df39b369bb3.bin",
     "content_type": "text/html"
+  },
+  "http://google.com/": {
+    "file": "responses/cf4b367e49bf0b22041c6f065f4aa19f3cfe39c8d5abc0617343d1a66c6a26f5.bin",
+    "content_type": "text/html"
   }
 }
