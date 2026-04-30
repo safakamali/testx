@@ -14,5 +14,9 @@
   "http://aznude.com/": {
     "file": "responses/d6d212b96f6bdc065e450b53a78b8b5f4bd1fad37ff6cecbb8a848aa174d9434.bin",
     "content_type": "text/html"
+  },
+  "http://github.com/": {
+    "file": "responses/793a92a45980286190d8c4cb5e3a4d7846373fecde23e4d95f22bfdc98eec94c.bin",
+    "content_type": "text/html"
   }
 }
