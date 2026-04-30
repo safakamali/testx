@@ -13,57 +13,40 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Find new batch files
+      - name: Install jq
+        run: sudo apt update && sudo apt install -y jq
+      - name: Find batch file
         id: find
         run: |
-          # پیدا کردن فایل‌های batch که پردازش نشده‌اند (بدون فایل done متناظر)
-          shopt -s nullglob
           for batch in requests/batch_*.json; do
-            timestamp=$(echo $batch | grep -oP 'batch_\K[0-9_]+')
-            if [ ! -f "done_${timestamp}.txt" ]; then
-              echo "batch_file=$batch" >> $GITHUB_OUTPUT
-              echo "timestamp=$timestamp" >> $GITHUB_OUTPUT
-              break  # فقط یک batch در هر اجرا
+            if [ -f "$batch" ]; then
+              timestamp=$(echo "$batch" | grep -oP 'batch_\K[0-9_]+')
+              if [ ! -f "done_${timestamp}.txt" ]; then
+                echo "batch_file=$batch" >> $GITHUB_OUTPUT
+                echo "timestamp=$timestamp" >> $GITHUB_OUTPUT
+                break
+              fi
             fi
           done
-
-      - name: Download URLs in batch
+      - name: Download URLs
         if: steps.find.outputs.batch_file
         run: |
           mkdir -p responses
           batch_file="${{ steps.find.outputs.batch_file }}"
           timestamp="${{ steps.find.outputs.timestamp }}"
           urls=$(jq -r '.[]' "$batch_file")
-          
-          # خواندن mapping موجود یا ایجاد جدید
-          if [ -f mapping.json ]; then
-            cp mapping.json mapping_old.json
-          else
-            echo '{}' > mapping_old.json
-          fi
-          
-          # دانلود هر URL
-          echo "$urls" | while read url; do
-            if [ -z "$url" ]; then continue; fi
-            # هش کردن URL برای نام فایل
+          if [ -f mapping.json ]; then cp mapping.json mapping_old.json; else echo '{}' > mapping_old.json; fi
+          for url in $urls; do
+            [ -z "$url" ] && continue
             hash=$(echo -n "$url" | sha256sum | cut -d' ' -f1)
             output_file="responses/${hash}.bin"
-            # دانلود
             curl -L -s -o "$output_file" "$url" || echo "Failed: $url"
-            # تشخیص content-type
             content_type=$(file -b --mime-type "$output_file" 2>/dev/null || echo "application/octet-stream")
-            # به‌روزرسانی mapping
             jq --arg url "$url" --arg file "$output_file" --arg ct "$content_type" \
                '.[$url] = {"file": $file, "content_type": $ct}' mapping_old.json > mapping.json
             cp mapping.json mapping_old.json
           done
-          
-          # ایجاد فایل done برای این batch
           touch "done_${timestamp}.txt"
-
       - name: Commit and push
         if: steps.find.outputs.batch_file
         run: |
