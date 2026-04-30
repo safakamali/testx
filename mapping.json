@@ -2,5 +2,9 @@
   "http://example.com/": {
     "file": "responses/2a1b402420ef46577471cdc7409b0fa2c6a204db316e59ade2d805435489a067.bin",
     "content_type": "text/html"
+  },
+  "http://bbc.com/": {
+    "file": "responses/08e8262ecc672d4b56e7a18e499facde3afc262a49c6be8d85fd7df39b369bb3.bin",
+    "content_type": "text/html"
   }
 }
