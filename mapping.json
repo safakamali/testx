@@ -22,5 +22,13 @@
   "http://github.com/safakamali": {
     "file": "responses/a900bdad68310d5e7130856306820f1e2db38d4a25d09cd0beb1f30109c5a0ac.bin",
     "content_type": "text/html"
+  },
+  "http://github.com/safakamali/1": {
+    "file": "responses/dd60af9289d893a2cf925e48a6bd0b195663789209d95ddaa69411ed2765fba0.bin",
+    "content_type": "text/html"
+  },
+  "http://github.com/1": {
+    "file": "responses/7978871e1f03a5ef06f5d65434a1442ea1c0f17126c73ba67326fa45556397c4.bin",
+    "content_type": "text/html"
   }
 }
